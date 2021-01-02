@@ -190,6 +190,28 @@ def accordingperson():
     timecost=time_end-time_start
     return jsonify({'Count':len(data),'MysqlTime':timecost})
 
+@app.route('/api/comment',methods=['GET'])
+def accordingbycomment():
+    time_start=time.time()
+    data=[]
+    get_args = request.args.to_dict()
+    print(get_args)
+    url=''
+    if 'userId' in get_args:
+        url=url+'user_id="'+get_args['userId']+'"'
+    print(url)
+    sql = 'select product_id from comments where '
+    sql=sql+url
+
+    cursor.execute(sql)
+    results = cursor.fetchall()
+    for row in results:
+        movie = {}
+        movie['Movie_id'] = row[0]
+        data.append(movie)
+    time_end=time.time()
+    timecost=time_end-time_start
+    return jsonify({'Count':len(data),'MysqlTime':timecost})
 
 if __name__ == '__main__':
     app.run(host='127.0.0.1',port=5000,debug=True)
